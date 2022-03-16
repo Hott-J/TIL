@@ -75,8 +75,9 @@ public class TodoListController {
 ### Step2
 
 - Redis docker image download
-- docker pull redis
-- docker run --rm -p 4025:6379 -d --name redis-1 redis redis-server
+  - `docker pull redis`
+
+- `docker run --rm -p 4025:6379 -d --name redis-1 redis redis-server`
   - standalone
 
 
