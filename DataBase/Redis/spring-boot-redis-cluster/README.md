@@ -1,4 +1,4 @@
-## Redis Docker StandAlone Simple Example
+## Redis Docker StandAlone Cache Simple Example
 
 
 
