@@ -26,7 +26,7 @@
 
 예제 테스트
 
-- git clone https://github.com/avinash10584/spring-boot-redis-cluster.git
+- `git clone https://github.com/avinash10584/spring-boot-redis-cluster.git`
 
 
 
