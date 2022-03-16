@@ -124,7 +124,7 @@ public class Application {
   - 위의 명령어로 인해 redis-1 컨테이너가 spring-redis-network에 연결됨을 확인할 수 있다
   - 아래 사진에서 redis-1 컨테이너말고 spring-boot-redis도 연결됬다고 보이는데, 제 오류입니다... ㅎㅎ redis-1만  있어야 합니다.
 
-- ![image-20220316195244569](C:\Users\hakjae_chung\AppData\Roaming\Typora\typora-user-images\image-20220316195244569.png)
+- ![image](https://user-images.githubusercontent.com/47052106/158580099-b1c0d800-ac51-4e59-8670-a77ab50db9f6.png)
 
 - IPv4 주소를 확인합니다
 
@@ -230,7 +230,7 @@ public class TodoListController {
 
 - postman으로 요청
 
-![image-20220316195750888](C:\Users\hakjae_chung\AppData\Roaming\Typora\typora-user-images\image-20220316195750888.png)
+![image](https://user-images.githubusercontent.com/47052106/158580135-e92f267d-6dc0-4c4b-8410-4ee96713070f.png)
 
 캐싱한 덕분에 소요시간이 겨우 6ms밖에 안됨을 확인할 수 있다
 
