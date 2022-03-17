@@ -522,18 +522,18 @@ Redis sentinel을 통해 failover 처리를 할 수 있다
 `docker stop $(docker ps -a -q)`
 
 ```
-docker run --rm --net spring-redis-network -v /mnt/c/Development/github/spring-boot-redis-cluster/redis-conf-sentinel:/redis_config -p 4025:6379 -d --name redis-1 redis redis-server /redis_config/node1.conf
+docker run --rm --net spring-redis-network -v  C:\Users\hakjae_chung\Desktop\개인공부\TIL\DataBase\Redis\spring-boot-redis-cluster/redis-conf-sentinel:/redis_config -p 4025:6379 -d --name redis-1 redis redis-server /redis_config/node1.conf
 
-docker run --rm --net spring-redis-network -v /mnt/c/Development/github/spring-boot-redis-cluster/redis-conf-sentinel:/redis_config -p 5025:6379 -d --name redis-1-slave redis redis-server /redis_config/node1-slave-1.conf
+docker run --rm --net spring-redis-network -v  C:\Users\hakjae_chung\Desktop\개인공부\TIL\DataBase\Redis\spring-boot-redis-cluster/redis-conf-sentinel:/redis_config -p 5025:6379 -d --name redis-1-slave redis redis-server /redis_config/node1-slave-1.conf
 
-docker run --rm --net spring-redis-network -v /mnt/c/Development/github/spring-boot-redis-cluster/redis-conf-sentinel:/redis_config -p 5026:6379 -d --name redis-2-slave redis redis-server /redis_config/node1-slave-2.conf
+docker run --rm --net spring-redis-network -v  C:\Users\hakjae_chung\Desktop\개인공부\TIL\DataBase\Redis\spring-boot-redis-cluster/redis-conf-sentinel:/redis_config -p 5026:6379 -d --name redis-2-slave redis redis-server /redis_config/node1-slave-2.conf
 
 
-docker run --rm --net spring-redis-network -v /mnt/c/Development/github/spring-boot-redis-cluster/redis-conf-sentinel:/redis_config -p 6025:6379 -d --name sentinel-1 redis redis-server /redis_config/sentinel1.conf --sentinel
+docker run --rm --net spring-redis-network -v  C:\Users\hakjae_chung\Desktop\개인공부\TIL\DataBase\Redis\spring-boot-redis-cluster/redis-conf-sentinel:/redis_config -p 6025:6379 -d --name sentinel-1 redis redis-server /redis_config/sentinel1.conf --sentinel
 
-docker run --rm --net spring-redis-network -v /mnt/c/Development/github/spring-boot-redis-cluster/redis-conf-sentinel:/redis_config -p 6026:6379 -d --name sentinel-2 redis redis-server /redis_config/sentinel2.conf --sentinel
+docker run --rm --net spring-redis-network -v  C:\Users\hakjae_chung\Desktop\개인공부\TIL\DataBase\Redis\spring-boot-redis-cluster/redis-conf-sentinel:/redis_config -p 6026:6379 -d --name sentinel-2 redis redis-server /redis_config/sentinel2.conf --sentinel
 
-docker run --rm --net spring-redis-network -v /mnt/c/Development/github/spring-boot-redis-cluster/redis-conf-sentinel:/redis_config -p 6027:6379 -d --name sentinel-3 redis redis-server /redis_config/sentinel3.conf --sentinel
+docker run --rm --net spring-redis-network -v  C:\Users\hakjae_chung\Desktop\개인공부\TIL\DataBase\Redis\spring-boot-redis-cluster/redis-conf-sentinel:/redis_config -p 6027:6379 -d --name sentinel-3 redis redis-server /redis_config/sentinel3.conf --sentinel
 
 docker logs sentinel-2
 ```
@@ -569,9 +569,9 @@ spring:
 ```
 docker stop spring-boot-redis
 
-DOCKER_BUILDKIT=1 docker build -t learnings/spring-boot-redis-cluster .
+DOCKER_BUILDKIT=1 docker build -t /spring-boot-redis-cluster .
 
-docker run --rm --net spring-redis-network -e "SPRING_PROFILES_ACTIVE=sentinel" -p 4024:4024 --name spring-boot-redis learnings/spring-boot-redis-cluster
+docker run --rm --net spring-redis-network -e "SPRING_PROFILES_ACTIVE=sentinel" -p 4024:4024 --name spring-boot-redis spring-boot-redis-cluster
 ```
 
 
