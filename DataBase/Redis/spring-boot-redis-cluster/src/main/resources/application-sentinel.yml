@@ -10,6 +10,8 @@ spring:
     type: redis
   redis:
     sentinel:
-      master: redis-cluster      nodes:        - 172.18.0.5:6379
-        - 172.18.0.6:6379
-        - 172.18.0.7:6379
+      master: redis-cluster
+      nodes:
+        - 172.20.0.5:6379
+        - 172.20.0.6:6379
+        - 172.20.0.7:6379
