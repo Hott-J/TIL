@@ -10,7 +10,6 @@ spring:
     type: redis
   redis:
      cluster:
-       
        nodes:
         - 172.20.0.3:6379
         - 172.20.0.2:6379
