@@ -5,24 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eec7fe78-706b-4fe2-b91e-f2ad27e6bfea" name="변경" comment="변경">
-      <change afterPath="$PROJECT_DIR$/../code/ex1-hello-jpa/.idea/ex1-hello-jpa.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../code/jpashop/.idea/jpashop.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/domain/customer/Customer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/domain/customer/CustomerRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/domain/order/CustomerOrder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/domain/order/CustomerOrderRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/domain/order/OrderProductMap.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/domain/product/Product.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/domain/product/ProductRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/exception/ResourceNotFoundException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/service/CustomerService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/test/java/com/example/springmockspybean/service/CustomerServiceMockTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/test/java/com/example/springmockspybean/service/CustomerServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../DataBase/Redis/spring-boot-redis-cluster/src/main/resources/application-cluster.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../DataBase/Redis/spring-boot-redis-cluster/src/main/resources/application-cluster.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../code/ex1-hello-jpa/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../code/ex1-hello-jpa/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../code/jpashop/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../code/jpashop/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/domain/member/Member.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/domain/member/MemberRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/domain/member/MemberService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/dto/OrderResponseDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/test/java/com/example/springmockspybean/member/MemberRepositoryMockTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/test/java/com/example/springmockspybean/member/MemberRepositorySpyTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/test/java/com/example/springmockspybean/service/CustomerServiceSpyMapperTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/TestcodeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/TestcodeApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/service/CustomerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../테스트코드/testcode/src/main/java/com/example/springmockspybean/service/CustomerService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

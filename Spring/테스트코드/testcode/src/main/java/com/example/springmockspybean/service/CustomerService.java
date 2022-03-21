@@ -5,6 +5,7 @@ import com.example.springmockspybean.domain.customer.CustomerRepository;
 import com.example.springmockspybean.domain.order.CustomerOrderRepository;
 import com.example.springmockspybean.domain.order.OrderProductMap;
 import com.example.springmockspybean.domain.product.Product;
+import com.example.springmockspybean.dto.OrderResponseDto;
 import com.example.springmockspybean.exception.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -62,18 +63,20 @@ public class CustomerService {
 
         httpSession.setAttribute("orderCount", count);
     }
-//
-//    @Transactional(readOnly = true)
-//    public String getCustomerJsonString(String requestBody) throws IOException {
-//
-//        Customer customer = objectMapper.readValue(requestBody, Customer.class);
-//
-//        List<Product> products = customerOrderRepository.findTopByCustomer(customer)
-//                .map(o -> o.getProducts().stream()
-//                        .map(OrderProductMap::getProduct)
-//                        .collect(Collectors.toList()))
-//                .orElse(new ArrayList<>());
-//
-//        return objectMapper.writeValueAsString(new OrderResponseDto(customer.getName(), products));
-//    }
+
+    @Transactional(readOnly = true)
+    public String getCustomerJsonString(String requestBody) throws IOException {
+
+        // 외부에서 받은 Json String을 Customer객체로 변환
+        Customer customer = objectMapper.readValue(requestBody, Customer.class);
+
+        List<Product> products = customerOrderRepository.findTopByCustomer(customer)
+                .map(o -> o.getProducts().stream()
+                        .map(OrderProductMap::getProduct)
+                        .collect(Collectors.toList()))
+                .orElse(new ArrayList<>());
+
+        // 가져온 정보들을 조합하여 OrderResponseDto의 Json String으로 변환하여 반환
+        return objectMapper.writeValueAsString(new OrderResponseDto(customer.getName(), products));
+    }
 }
