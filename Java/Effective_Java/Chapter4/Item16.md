@@ -19,6 +19,8 @@ public class ItemInfo {
 
 내부에 어떤 데이터로 관리를 하고 있는지 알 수 없게 한다
 
+- get Method를 이용하면 된다
+
 
 
 캡슐화
