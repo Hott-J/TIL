@@ -133,6 +133,9 @@ ENTRYPOINT ["node", "/app.js"] # node명령어로 /app.js 실행
     - 인증 (도커 허브)
   - `$ docker push hello.js:latest`
     - 허브에 저장
+  - 허브에 업로드하려면 container 이름을 `chung1306/containerName` 와 같이 설정해야한다
+    - ` docker tag webserver chung1306/webserver`
+      - 도커 이미지 이름 변경하는 방법 (webserver -> chung1306/webserver)
 
 - 도커 호스트에 다양한 리눅스 배포판 컨테이너들이 올라갈 수 있는 이유
   - https://bluese05.tistory.com/10
