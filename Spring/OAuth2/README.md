@@ -52,7 +52,7 @@
 
 - `Client ID`: public key
 - `Client Secret`: secret key. 비공개. 환경변수에 담아둔다
-- `Authorized Redirect URIs`: Client ID와 Clinet Secret을 확인한 후 redirect할 url 주소
+- `Authorized Redirect URIs`: 유저가 성공적으로 애플리케이션에 인증을 마친 후, Authorization Severs는 해당 경로로 리디렉션한다
 - 구글 OAuth2 로그인 한다고 가정
   - 구글에 등록된 `Client ID`, `Client Secret`, `Redirect URL`과 우리가 만든 APP에 등록된 `Client ID`, `Client Secret`, `Redirect URL`이 서로 일치해야함. 하나라도 불일치하면 로그인 실패
 
@@ -60,117 +60,55 @@
 
 ### OAuth2 동작 원리
 
-- **전제조건**
-  - Client가 Auth Server로 부터 `Client ID`, `Client Secret`, `Redirect URL`을 모두 등록/발급 받은 상태
-- **Resource Owner의 승인**
-  - `Resource Owner`가 `Auth Server`에게 승인 요청을 보냄
-  - `Auth Server`가 `Resource Owner`에게 `Authorization Code`를 보냄
-  - `Resource Owne`r가 `Client`에
-  - 게 `Authorization Code`를 보낸다.
-  - `Client`는 **`Client ID, Client Secret, Redirect URL, Authorization Code`** 네 가지를 모두 갖고 있는 상태이다.
-- **Auth Server의 승인**
-  - 위 네 가지 정보를 Auth Server에 보낸다. (`Redirect URL`은 optional)
-    - `redirect_url`을 보내는 건 선택이다
-    - 하지만 **`Client ID, Client Secret, Authorization Code 세 가지는 꼭 보내야 한다`**
-  - Resource Server는 네 가지 정보가 모두 일치하는지 확인한다.
-  - 하나라도 불일치 할 경우 OAuth 로그인은 실패한다.
-  - 모두 일치하면 `Access Token`을 발급한다
-    - `Authorization Code` 값은 더 이상 필요없기 때문에 삭제한다
-- **Access Token 발급**
-  - 발급 받은 `Access Token`을 통해서 `Resource Server`의 기능을 이용할 수 있다
-- **Refresh Token**
-  - `Access Token`은 cookie처럼 만료 기한이 있다
-  - 따라서 만료가 되면 재발급 받아야한다
-  - 이 때 사용하는 게 `Refresh Token` 이다
-  - 서비스마다 `Refresh Token`을 발급하지 않는 경우도 있고 쓰는 방식도 다르다
-  - `Access Token`은 주로 **세션에 저장**한다
-    - 만료 기한이 짧다
-  - `Refresh Token`은 중요하기 때문에 **DB에 저장**한다
-    - 만료 기한이 길다
-  - `Refresh Token`이 동작하는 대략적인 원리 아래 그림과 같다
-  - ![image](https://user-images.githubusercontent.com/47052106/159862173-a54618cb-5833-4808-9ae1-b73b4def8ea0.png)
+![image](https://user-images.githubusercontent.com/47052106/159877277-13abbfca-9210-4ae3-b2be-ecafb3e5f6c5.png)
 
-### Access Token을 받기까지의 과정
+**1**
 
-여기서 `Resource Owner`는 웹 사용자라면 브라우저, 모바일 사용자라면 iOS/Android 휴대폰이라고 생각하면 편하다
+- User가 클라이언트의 로그인이 필요한 자원에 접근**
+
+**2~3**
+
+- `client_id`,  `redirect_url`, `response_type`, `scope`를 포함하여 사용자의 브라우저를 `Authorization Server`에 리다이렉션 시킵니다
+- 이때, `Authorization Server`는 파라미터로 받은 `client_id`와 `redirect_url`이 사전에 등록된 정보와 일치하는지 검증
+- 민감한 정보가 포함되니 일치하지 않는다면 (검증 실패) 요청이 거절됨
+
+**4~5**
+
+- 로그인 페이지를 열고 User에게 Client가 등록한 scope에 대한 정보 제공 동의 허용 여부를 나타냄
+  - ex) ~에서 사용자의 프로필 이미지, 사용자 이름에 접근하려고 함
+
+**6~12**
+
+- User가 동의하고 로그인에 성공하면 `Authorization Server`는 Client에게 `Authorization Code`를 발급합니다
+- 클라이언트는 Authorization code, client_id, secret을 Authorization Server에 다시 전송
+- Authorization Server는 전달받은 데이터를 검증하고 `Access Token`을 Client에게 발급함
+- 이후, Access Token을 이용해서 Resource Server에 데이터를 요청하고 검증이 완료되면 Resource 서버는 Client에게 scope 범위의 데이터를 응답합니다
 
 
 
-#### 1. App(Client)가 User(Resource Owner)에게 OAuth 로그인 버튼을 보여준다
+#### Refresh Token
 
-- 해당 로그인 버튼에는 `clientId`, `scope`(가져올 회원 정보 범위), `redirect_url` 정보가 들어있다
-- ![image](https://user-images.githubusercontent.com/47052106/159862470-d00ead4d-8ad0-48a3-8538-b80dca3a49af.png)
+![image](https://user-images.githubusercontent.com/47052106/159878060-ee952057-0cb0-41cb-8328-a1996508c4ff.png)
 
-
-
-#### 로그인 버튼을 누르면 Resource Server는 Resource Owner에게 로그인 화면을 보여준다.
-
-![image](https://user-images.githubusercontent.com/47052106/159862572-d939acfd-dfa6-4521-8c50-21a38506f0de.png)
-
-#### 로그인 과정에서 scope에 정의된 정보 공개 범위에 대한 동의를 구한다.
-
-- 로그인 과정에서, `clientId`와 `redirect_url`이 일치하는지 확인하고 하나라도 일치하지 않으면 더이상 진행하지 않는다.
-
-![image](https://user-images.githubusercontent.com/47052106/159862653-75c826e4-7104-41c3-9a28-3694de617f45.png)
-
-#### 사용자로부터 동의를 얻게되면 Resource Server는 사용자 아이디와 제공할 scope를 알게 된다
-
-![image](https://user-images.githubusercontent.com/47052106/159862949-5a91e91d-e6f6-4744-9d79-c04754142fd5.png)
+`Access Token`은 수명 시간이 존재합니다. 그렇기 때문에 Access Token이 만료될 경우 데이터에 접근할 수 없는데, 위와 같은 과정을 매번 반복하는 것은 비효율적일 수도 있습니다
 
 
 
-#### 로그인 인증이 끝나면 Resource Server는 Resource Owner에게 `Authorization Code`를 전달한다.
+**A~E**
 
-![image](https://user-images.githubusercontent.com/47052106/159863256-02e68cf2-b4cf-4f77-b9e8-eb8f0bf2602e.png)
+- 위의 과정과 동일
 
-#### 이 때 redirect_url로 전환되면서 `authorization_code`가 전달되며 이 과정에서 App(Client)가 `authorization_code`를 알게 된다.
+**F**
 
-![image](https://user-images.githubusercontent.com/47052106/159863359-4340f5d2-365f-4a69-b704-626d69b32f4b.png)
+- Access Token이 만료되어 데이터 액세스가 거부됨
+- 구현 방식마다 다르지만 그림처럼 B 상황에서 Authorization Server는 Client에게 Access Token을 발급할 때,  Refresh Token을 함께 부여하기도 함
 
-#### App(Client)는 Resouce Server에게 `Client ID, Client Secret, Redirect URL, Authorization Code` 를 모두 보낸다.
+**G**
 
-![image](https://user-images.githubusercontent.com/47052106/159863417-1dfbb352-4c81-482e-9a89-ec70dbe98d4c.png)
+- Client는 Authorization Server에게 Refresh Token을 사용하여 새로운 Access Token을 요청
 
+**H**
 
+- 클라이언트, Refresh Token의 검증이 성공할 경우 새로운 Access Token을 부여함
+- refresh token도 갱신될 수 있다. 서버마다 상이함
 
-#### 위 네 가지 정보가 모두 일치하면 Resource Server는 Client에게 `AccessToken`을 발급한다.
-
-- `Authorization Code` 값은 더 이상 필요없기 때문에 삭제한다. (Resource Server, Client 모두)
-
-![image](https://user-images.githubusercontent.com/47052106/159863475-13bbfe1c-477c-4a7b-88d1-9008640256fa.png)
-
-이렇게 발급받은 `Access Token`을 통해서 App(Client)는 Resource Server로부터 사용자 정보를 가져올 수 있다
-
-
-
-### 인증 프로세스 요약
-
-![image](https://user-images.githubusercontent.com/47052106/159863538-9460c0f9-cdb2-4d38-93a3-ed4879f1e622.png)
-
-
-
-생활코딩 홈페이지에서 깃허브 로그인하는 과정이라고 가정한다
-
-- 사용자가 생활코딩 홈페이지에서 깃허브 로그인 버튼을 누른다
-
-- 브라우저는 생활코딩 서버에 `로그인 URL`을 요청한다
-
-- 생활코딩 서버에서 `로그인 URL`을 브라우저에 전달한다
-
-- 브라우저는 서버에서 받은 `로그인 URL`로 리다이렉트한다
-
-- 브라우저에 깃허브 로그인 화면이 뜬다
-
-- 사용자는 생활코딩이 요청한 정보(scope) 제공 요청을 승인하고, 자신의 깃허브 아이디와 비밀번호를 입력한다
-
-- 깃허브 인증 서버(Auth Server)에서 사용자의 아이디와 비밀번호, 제공할 정보 범위(scope)를 확인한다
-
-- 인증이 완료되면 `Authorization Code`를 `redirect_url`에 붙여 보낸다
-
-  - ```null
-    ex) https://redirect_url?code=199b7af5ea11078ee507
-    ```
-
-- 생활코딩 서버에서는 `Authorization Code`를 받아 `Client ID, Client Secret, Authorization Code` 를 깃허브 OAuth 서버에 보낸다. (redirect_url은 optional)
-- 깃허브 서버는 `Client ID, Client Secret, Authorization Code` 가 모두 일치하는지 확인하고, 모두 일치하면 `AccessToken`을 생활코딩 서버에 보낸다
-- 생활코딩 서버는 `AccessToken`을 이용해 깃허브의 Resource Server로부터 사용자 정보를 받아온다
