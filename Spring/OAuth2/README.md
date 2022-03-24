@@ -1,26 +1,4 @@
-# Spring Boot OAuth2 Social Login with Google + JWT + React
-
-
-
-### Prerequisites
-
-- Spring Framework
-- Spring Security
-- MySQL
-- React
-
-
-
-
-#### Spring package settings
-
-![image](https://user-images.githubusercontent.com/47052106/159847190-25a2a5aa-92f0-4203-bb97-3341b1890e30.png)
-
-
-
-#### Package tree
-
-![image](https://user-images.githubusercontent.com/47052106/159848540-bba58263-7950-4f24-bd19-045ba2007cda.png)
+## OAuth2
 
 
 
@@ -90,7 +68,6 @@
   - `Resource Owne`r가 `Client`에
   - 게 `Authorization Code`를 보낸다.
   - `Client`는 **`Client ID, Client Secret, Redirect URL, Authorization Code`** 네 가지를 모두 갖고 있는 상태이다.
-
 - **Auth Server의 승인**
   - 위 네 가지 정보를 Auth Server에 보낸다. (`Redirect URL`은 optional)
     - `redirect_url`을 보내는 건 선택이다
@@ -112,8 +89,6 @@
     - 만료 기한이 길다
   - `Refresh Token`이 동작하는 대략적인 원리 아래 그림과 같다
   - ![image](https://user-images.githubusercontent.com/47052106/159862173-a54618cb-5833-4808-9ae1-b73b4def8ea0.png)
-
-
 
 ### Access Token을 받기까지의 과정
 
@@ -199,49 +174,3 @@
 - 생활코딩 서버에서는 `Authorization Code`를 받아 `Client ID, Client Secret, Authorization Code` 를 깃허브 OAuth 서버에 보낸다. (redirect_url은 optional)
 - 깃허브 서버는 `Client ID, Client Secret, Authorization Code` 가 모두 일치하는지 확인하고, 모두 일치하면 `AccessToken`을 생활코딩 서버에 보낸다
 - 생활코딩 서버는 `AccessToken`을 이용해 깃허브의 Resource Server로부터 사용자 정보를 받아온다
-
-
-
-### Spring Boot Application Configuration
-
-- application.properties -> application.yml
-  - 계층구조의 명확화
-
-```yml
-spring:
-    datasource:
-        url: jdbc:mysql://localhost:3306/spring_social?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
-        username: USERNAME
-        password: PASSWORD
-
-    jpa:
-        show-sql: true
-        hibernate:
-            ddl-auto: update
-            naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
-        properties:
-            hibernate:
-                dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-    security:
-      oauth2:
-        client:
-          registration:
-            google:
-              clientId: CLIENTID
-              clientSecret: CLIENTSECRET
-              redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
-              scope:
-                - email
-                - profile
-app:
-  auth:
-    tokenSecret: TOKENSECRET
-    tokenExpirationMsec: 864000000
-  cors:
-    allowedOrigins: http://localhost:3000,http://localhost:8080
-  oauth2:
-    authorizedRedirectUris:
-      - http://localhost:3000/oauth2/redirect
-      - myandroidapp://oauth2/redirect
-      - myiosapp://oauth2/redirect
-```
