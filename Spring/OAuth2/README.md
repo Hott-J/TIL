@@ -8,21 +8,25 @@
 
 - `client`는 `resource owner`의 `protected resource`에 접근을 시도하는 애플리케이션이다
 - `protected resource`에 접근하려면 `client`는 `resource Owner`의 허가 즉 `access token`이 필요하다
+- 백엔드 서버 (내가 만든 블로그 서버)
 
 ####  Resource Server
 
 - `resource owner`의 `protected resource`를 가지고 있는`API서버`
 - `resource owner`의 `protected resource`를 접근하려면 `access token`이 필요하다
+- 구글 서버 (DB 접근 가능)
 
 #### Authorization Server
 
 - `client`에게 `access token`을 발급하는 서버
 - `resource server`와 통합되어 있을 수 있다
+- 구글 서버
 
 #### Resource Owner
 
 - `protected resource`의 접근 권한을 줄 수 있는 사람
 - `end-user`라 불린다
+- 사용자 (정학제)
 
 #### Access Token
 
@@ -45,6 +49,7 @@
 ### OAuth2 사용 이유
 
 - 회원가입 시 이메일 인증, 로그인 시 보안, 비밀번호 찾기/변경, 회원정보 수정 등을 구글,페이스북등에 위임하므로 서비스 개발에 집중
+- 개인정보를 여러 홈페이지에 노출시키는 것보다 한 군데(대형 포탈 사이트)에서 관리하는 것이 보안상 장점
 
 
 
