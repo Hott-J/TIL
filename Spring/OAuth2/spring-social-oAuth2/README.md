@@ -334,24 +334,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 }
 ```
 
-- @EnableGloabalMethodSecurity
+- **@EnableGloabalMethodSecurity**
   - 특정 메서드에 권한 처리를 하는 MethodSecurity 설정 기능 제공. 각 설정값 true로 변경하면 사용 가능 (default: false)
   - securedEnable: @Secured 사용하여 인가처리하는 옵션
   - prePostEnable: @PreAuthorize, @PostAuthorize 사용하여 인가처리 옵션
   - jsr250Enabled: @RolesAllowed 사용하여 인가처리 옵션
-- httpBasic().disable()
+- **httpBasic().disable()**
   - 요청 헤더에 username과 password를 실어 보내면 브라우저 또는 서버가 그 값을 읽어서 인증하는 방식인 Basic 인증을 비활성화한다
-- csrf().disable()
+- **csrf().disable()**
   - Jwt token을 사용할 것이므로 비활성화한다
   - 일반 사용자들이 브라우저를 통해 요청을 하는 경우에는 CSRF 방지를 사용하는 것이 좋다
-- sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+- **sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)**
   - 애플리케이션 내에서 세션을 사용하지 않으므로 세션을 사용하지 않는 전략을 선택
-- .exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint())
+- **.exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint())**
   -  인증을 하지 않은 사용자가 인증이 필요한 리소스에 접근했을 때 유저가 인증할 수 있는 authenticationEntryPoint 설정하는 것
-- .oauth2.Login().authorizationEndpoint().authorizationRequestRepository(cookieAuthorizationRequestRepository())
+- **.oauth2.Login().authorizationEndpoint().authorizationRequestRepository(cookieAuthorizationRequestRepository())**
   - OAuth2 진행시 state 값을 잠시 저장해야 한다
   - AuthorizationRequest를 쿠키를 통해 저장하겠다는 의미
-- userInfoEndpoint().userService(customOAuth2UserService)
+- **userInfoEndpoint().userService(customOAuth2UserService)**
   - 유저의 정보를 얻을 수 있는 UserInfo Endpoint로 부터 유저의 정보를 얻어오기 위해 사용될 서비스로 `customOAuth2UserService`를 등록한다
 
 
