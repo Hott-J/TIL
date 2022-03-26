@@ -146,22 +146,98 @@ ENTRYPOINT ["node", "/app.js"] # node명령어로 /app.js 실행
 
 ## 컨테이너 보관창고
 
-도커 레지스트리
+**도커 레지스트리**
 
 - 컨테이너 보관 창고가 있어요?
-  - Registry: 컨테이너 이미지를 저장하는 저장소
-  - 도커허브
-  - Private Registry: 사내의 컨테이너 저장소
+  - `Registry`: 여러 형태의 컨테이너 이미지를 저장하는 저장소
+  - `Docker Hub`: hub.docker.com
+  - `Private Registry`: 사내의 컨테이너 저장소
 - 도커 허브를 사용
   - 이미지 10만여개 존재
   - hub.docker.com
   - 이미지 검색
-    - $ docker search "keyword"
+    - `$ docker search "keyword"`
   - public
-- private Registry 구축
+- private Registry 구축 (사내에서만 운영)
   - registry라는 컨테이너를 실행한다
-  - $ docker run -d -p 5000:5000 --restart always --name registry registry:2
+  - `$ docker run -d -p 5000:5000 --restart always --name registry registry:2`
   - 앞에 호스트와 포트번호가 필요하다
+  -  `$ docker tag mongo localhost:5000/mongo`
+    - localhost가 아니라 IP Address가 들어갈 수 있다 (외부에 업로드)
+  - `$ docker push localhost:5000/mongo`
+    - 나의 저장소에 업로드
+    - `/var/lib/docker/volumes/[container id]/_data/docker/registry/v2/repositories`에 저장되어있다
 
 
 
+### 컨테이너 사용
+
+**컨테이너 실행 라이프 사이클**
+
+- 이미지 검색
+
+  - `docker search [옵션] <이미지이름:태그명>`
+
+- 이미지 다운로드
+
+  - `docker pull [옵션] <이미지이름:태그명>`
+
+- 다운받은 이미지 목록 출력
+
+  - `docker images`
+
+- 다운 받은 이미지 상세보기
+
+  - `docker inspect [옵션] <이미지이름:태그명>`
+
+- 이미지 삭제
+
+  - `docker rmi [옵션] <이미지이름>`
+
+- 이미지를 컨테이너화 (running X)
+
+  - `docker create [옵션] <이미지이름:태그명> `
+
+- 컨테이너 실행
+
+  - `docker start [옵션] <컨테이너이름>`
+
+- 컨테이너 상태 보기
+
+  - `docker ps [옵션]`
+
+- 실행중인 컨테이너 상세 보기
+
+  - `docker inspect <컨테이너이름>`
+
+- 컨테이너 멈춤
+
+  - `docker stop [옵션] <컨테이너이름>`
+
+- 컨테이너 삭제
+
+  - `docker rm [옵션] <컨테이너이름>`
+
+- **이미지 생성 + 컨테이너 생성/실행**
+
+  - `docker run [옵션] <이미지이름:태그명>`
+  - `pull -> create -> start`를 한번에 모아놓은 명령어
+
+- webserver 컨테이너에서 동작되는 프로세스 확인
+
+  - `docker top [옵션] webserver`
+
+- webserver 컨테이너 로그 정보
+
+  - `docker logs [옵션] webserver`
+  - `docker logs -f`
+
+- webserver 컨테이너를 /bin/bash로 실행
+
+  - `docker exec webserver /bin/bash`
+
+- 포그라운드로 실행중인 컨테이너에 연결
+
+  - `docker attach [옵션] 컨테이너이름`
+
+  
