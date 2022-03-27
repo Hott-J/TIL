@@ -170,7 +170,7 @@ ENTRYPOINT ["node", "/app.js"] # node명령어로 /app.js 실행
 
 
 
-### 컨테이너 사용
+## 컨테이너 사용
 
 **컨테이너 실행 라이프 사이클**
 
@@ -241,3 +241,67 @@ ENTRYPOINT ["node", "/app.js"] # node명령어로 /app.js 실행
   - `docker attach [옵션] 컨테이너이름`
 
   
+
+## 컨테이너 관리
+
+**컨테이너 리소스 제한**
+
+- 기본으로 컨테이너는 호스트 하드웨어 리소스의 사용 제한을 받지 않는다
+  - 컨테이너가 필요로 하는 만큼의 리소스만 할당해야한다
+- Docker command를 통해 제한할 수 있는 리소스
+  - CPU
+  - Memory
+  - Disk I/O
+  - `docker run --help`
+
+**Memory 리소스 제한**
+
+- 제한 단위는 b, k, m, g로 할당
+- -- memory, -m: 컨테이너가 사용할 최대 메모리 양을 지정
+  - `docker run -d -m 512m nignx:1.14`
+    - 512m 넘어가면 kill됨
+- --memory-swap: 컨테이너가 사용할 스왑 메모리 영역에 대한 설정, 스왑사이즈 = 메모리+스왑. 스왑 사이즈 생략 시 최대 메모리의 2배가 설정됨
+  - `docker run -d -m 200m --memory-swap 300m nginx:1.14`
+    - 200m까지 쓸 수 있고, 스왑사이즈도 300m 쓸 수 있음. 총 500m을 쓸 수 있는게 아니라 300m을 쓸 수 있음. 스왑메모리는 100m이란 뜻
+- --memory-reservation: --memory 값보다 적은 값으로 구성하는 소프트 제한 값 설정
+  - `docker run -d -m 1g --memory-reservation 500m nginx:1.14`
+    - 적어도 500m은 쓸 수 있게끔 보장되고 1g까지 쓸 수 있다
+- --oom-kill-disable: OOM Killer가 프로세스 kill 하지 못하도록 보호
+  - `docker run -d -m 200m --oom-kill-disable nginx:1.14`
+
+
+
+**CPU 리소스 제한**
+
+- --cpus: 컨테이너에 할당할 CPU core수를 지정. --cpus="1.5" 컨테이너가 최대 1.5개의 CPU 파워 사용가능
+  - `docker run -d --cpus=".5" ubuntu`
+- --cpuset-cpus: 컨테이너가 사용할 수 있는 CPU나 코어를 할당. cpu index는 0부터. --cpuset-cpus=0-4
+  - `docker run -d --cpuset-cpus 0-3 ubuntu`
+- --cpu-share: 컨테이너가 사용하는 CPU 비중을 1024 값을 기반으로 설정. --cpu-share 2048 기본 값보다 두 배 많은 CPU 자원을 할당
+  - `docker run -d --cpu-shares 2048 ubuntu`
+
+
+
+**Block I/O 제한**
+
+- --blkio-weight, --blkio-weight-device: Block IO의 Quota를 설정할 수 있으며 100~1000까지 선택. 디폴트 500
+  - `docker run -it --rm --blkio-weight 100 ubuntu /bin/bash`
+- --device-read-bps, --device-write-bps: 특정 디바이스에 대한 읽기와 쓰기 작업의 초당 제한을 kb, mb, gb 단위로 설정
+  - `docker run -it --rm --device-write-bps /dev/vda:1mb ubuntu /bin/bash`
+  - `docker run -it --rm --device-write-bps /dev/vad:10mb ubuntu /bin/bash`
+- --device-read-iops, --device-write-iops: 컨테이너의 read/write 속도의 쿼터를 설정한다. 초당 quota를 제한해서 I/O를 발생시킴. 0이상의 정수로 표기. 초당 데이터 전송량=IOPS * 블럭크기(단위 데이터 용량)
+  - `docker run -it --rm --device-write-iops /dev/vad:10 ubuntu /bin/bash`
+  - `docker run -it --rm --device-write-iops /dev/vad:100 ubuntu /bin/bash`
+
+
+
+**컨테이너 사용 리소스를 확인하는 모니터링 툴**
+
+- docker monitoring commands
+  - docker stat: 실행중인 컨테이너의 런타임 통계를 확인
+    - `docker stats [options] [container...]`
+  - docker event: 도커 호스트의 실시간 event 정보를 수집해서 출력
+    - `docker events -f container=<NAME>`
+    - `docker image -f container=<NAME>`
+  - cAdvisor
+    - https://github.com/google/cadvisor
