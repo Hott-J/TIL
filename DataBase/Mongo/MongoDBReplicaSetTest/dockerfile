@@ -1,8 +1,8 @@
-# dockerfile 
-FROM mongo
-WORKDIR ./
-RUN mkdir configs
-WORKDIR ./configs
-COPY init/* init/
-RUN chmod +x init/setup.sh
-CMD ["./configs/init/setup.sh"]
+## dockerfile
+#FROM mongo
+#WORKDIR ./
+#RUN mkdir configs
+#WORKDIR ./configs
+#COPY init/* init/
+#RUN chmod +x init/setup.sh
+#CMD ["./configs/init/setup.sh"]
