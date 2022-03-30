@@ -1,0 +1,15 @@
+# /etc/systemd/system/my-daemon.service
+
+[Unit]
+Description=My First Daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/local/sbin/my-daemon.sh
+Restart=always
+RestartSec=5
+User=user1
+Group=user1
+
+[Install]
+WantedBy=multi-user.target

@@ -1,5 +1,3 @@
-# Docker
-
 ## 컨테이너란?
 
 - 애플리케이션이 구동하기 위한 설비를 미리 구축한 환경시스템
@@ -300,8 +298,34 @@ ENTRYPOINT ["node", "/app.js"] # node명령어로 /app.js 실행
 - docker monitoring commands
   - docker stat: 실행중인 컨테이너의 런타임 통계를 확인
     - `docker stats [options] [container...]`
+    
   - docker event: 도커 호스트의 실시간 event 정보를 수집해서 출력
     - `docker events -f container=<NAME>`
     - `docker image -f container=<NAME>`
+    
   - cAdvisor
     - https://github.com/google/cadvisor
+    
+      
+
+## 컨테이너 볼륨
+
+- 컨테이너 이미지는 read-only
+- 컨테이너에 추가되는 데이터들은 별도의 read-write 레이어에 저장
+  - Union File System (Overlay)
+  - read-only, read-write가 하나의 레이어처럼 보이고 동작
+  - 실수로 컨테이너 삭제되면???
+    - Read-write 레이어 사라짐: 데이터 전부 날라감
+    - 중요 데이터는 영구적으로 보존해야한다!!!
+- 디스크에 영구적으로저장
+  - `docker run -d --name db -v /dbdata:/var/lib/mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=pass mysql`
+    - -v로 볼륨 마운트: 디스크에 저장
+    - 컨테이너 삭제해도 호스트 디비에는 여전히 데이터가 남아있으므로, 동일하게 docker run하면 그대로 사용할 수 있다
+  - `docker run -d -v /webdata:/var/www/html:ro httpd`
+    - 보통 ro (read-only)옵션을 줘서 볼륨 마운트된 데이터를 write하지 못하게 보호
+  - `docker run -d -v /var/lib/mysql -e M~~`
+    - 임의의 디렉터리를 만들어서 알아서 마운트
+- 컨테이너끼리 데이터 공유하기
+  - `docker run -v /webdata:/webdata -d --name df smlinux/df`
+  - `docker run -d -v /webdata:/usr/share/nginx/html:ro -d ubuntu`
+    - web content generator의 webdata가 index.html을 만들면 /webdata/index.html 형태로 저장되고 이게 ubuntu로 띄운 webserver에서 서빙해준다

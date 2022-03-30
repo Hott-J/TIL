@@ -1,0 +1,3 @@
+es:
+    url: localhost
+    port: 9200
