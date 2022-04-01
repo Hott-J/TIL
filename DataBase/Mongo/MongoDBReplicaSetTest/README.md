@@ -121,5 +121,5 @@ sudo vi/etc/hosts
 
   - `monog1:9042`는 `Secondary`로 재시작되었다
 
-    ![image-20220401141022679](C:\Users\hakjae_chung\AppData\Roaming\Typora\typora-user-images\image-20220401141022679.png)
+    ![image](https://user-images.githubusercontent.com/47052106/161199157-1262713d-f6e9-415f-8098-8328f0d975b5.png)
 
