@@ -5,7 +5,11 @@
 
 - docker
 
+- docker compose
 
+- linux
+
+  
 
 ### 사용 이유
 
