@@ -84,28 +84,42 @@ sudo vi/etc/hosts
   - ![image](https://user-images.githubusercontent.com/47052106/161197697-28f4e4d8-c934-4325-97a9-e5ae44cd1da7.png)
 
 - `Primary`를 죽여보자
-  - ![image](https://user-images.githubusercontent.com/47052106/161197876-d6b3fc3f-fc1d-45e3-ac45-4a9df1797114.png)
+
+  ![image](https://user-images.githubusercontent.com/47052106/161197876-d6b3fc3f-fc1d-45e3-ac45-4a9df1797114.png)
+
   - 누가 Primary가 되었는가
+
     - 기존의 `Primary` 였던 `mongo1:9042`는`health-check`에 실패하였다
+
     - `mongo2:9142`가 `Primary`가 되었음을 확인할 수 있다
-    - ![image](https://user-images.githubusercontent.com/47052106/161198009-17fffcdd-5a49-4c39-8837-04740c355998.png)
+
+      ![image](https://user-images.githubusercontent.com/47052106/161198009-17fffcdd-5a49-4c39-8837-04740c355998.png)
 
 
 
 - 그렇다면 `Write` 작업은 잘 될 것인가?
+
   - 잘된다!!!
+
   - `Primary`가 된 `mongo2:9142`와 연결을 맺어 `Write` 작업이 원활히 수행됨을 확인할 수 있었다
+
     - **고가용성 구조 성공** 
-  - ![image](https://user-images.githubusercontent.com/47052106/161198279-44332f48-55d4-4a88-9631-63d0927ab33e.png)
+
+    ![image](https://user-images.githubusercontent.com/47052106/161198279-44332f48-55d4-4a88-9631-63d0927ab33e.png)
 
 - 그렇다면 `Read` 작업은?
+
   - `Secondary`로 남아있던 `mongo3:9242`와 연결을 맺는다
+
   - 너무 잘된다!!!
-  - ![image](https://user-images.githubusercontent.com/47052106/161198510-967f0d13-a683-4271-9b6c-d28879000e54.png)
+
+    ![image](https://user-images.githubusercontent.com/47052106/161198510-967f0d13-a683-4271-9b6c-d28879000e54.png)
 
 
 
 - 멈춰있던 `mongo1:9042`를 다시 켜보자
+
   - `monog1:9042`는 `Secondary`로 재시작되었다
-  - ![image-20220401141022679](C:\Users\hakjae_chung\AppData\Roaming\Typora\typora-user-images\image-20220401141022679.png)
+
+    ![image-20220401141022679](C:\Users\hakjae_chung\AppData\Roaming\Typora\typora-user-images\image-20220401141022679.png)
 
