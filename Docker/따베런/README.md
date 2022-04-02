@@ -331,8 +331,99 @@ ENTRYPOINT ["node", "/app.js"] # node명령어로 /app.js 실행
   - `docker run -d -v /webdata:/var/www/html:ro httpd`
     - 보통 ro (read-only)옵션을 줘서 볼륨 마운트된 데이터를 write하지 못하게 보호
   - `docker run -d -v /var/lib/mysql -e M~~`
-    - 임의의 디렉터리를 만들어서 알아서 마운트
+    - 호스트가 자동으로 임의의 디렉터리를 만들어서 알아서 마운트
 - 컨테이너끼리 데이터 공유하기
   - `docker run -v /webdata:/webdata -d --name df smlinux/df`
   - `docker run -d -v /webdata:/usr/share/nginx/html:ro -d ubuntu`
     - web content generator의 webdata가 index.html을 만들면 /webdata/index.html 형태로 저장되고 이게 ubuntu로 띄운 webserver에서 서빙해준다
+
+- 윈도우의 경우 `/var/lib`이 없다
+  -  ![image](https://user-images.githubusercontent.com/47052106/160826575-c447f537-c441-4276-8a82-4b5cf223ccd2.png)
+
+​			   해당 경로에 `vhdx`형식으로 저장된다
+
+- `df` 명령어 (리눅스)
+
+  - 디스크 사용량을 모니터링
+
+  - `df -h /`: / (root) 디렉토리가 얼만큼 디스크 사용하는지 확인
+
+- 디렉토리 `lab8`을 참고
+
+
+
+### 컨테이너간 통신
+
+**어떻게 통신?**
+
+- Container Network Model
+- docker0
+  - virtual ethernet bridge: 172.17.0.0/16
+  - L2 통신 기반
+  - container 생성 시 veth 인터페이스 생성 (sandbox)
+  - 모든 컨테이너는 외부 통신을 docker0 통해 진행
+  - container running 시 `172.17.X.Y`로 IP 주소 할당
+  - docker0는 NAT (Network Address Translation) service와 port forwarding을 지원
+  - docker0는 컨테이너의 gateway 역할
+
+![image](https://user-images.githubusercontent.com/47052106/160985084-e2c1d330-4e90-4441-af39-8313bdfa268c.png)
+
+![image](https://user-images.githubusercontent.com/47052106/160985360-65b0a05f-7305-42fd-a0e6-80af3c408435.png)
+
+
+
+**컨테이너 포트를 외부로 노출**
+
+- port-forwarding
+  - cotainer port를 외부로 노출시켜 외부 연결 허용
+  - iptables rule을 통한 포트 노출
+    - **-p hostPort:containerPort**
+    - -p containerPort: hostPort는 random
+    - -P
+  - `docker run --name web -d -p 80:80 nginx`
+  - `iptables -t nat -L -n -v`
+- nginx 여러개 컨테이너 실행?
+  - 172.17.0.2:80, 172.17.0.3:80, 172.17.04:80
+    - 위와 같이 다른 ip에 동일한 port 할당받아서 실행되므로 여러 컨테이너 문제되지 않음
+
+
+
+**컨테이너 네트워크 추가**
+
+![image](https://user-images.githubusercontent.com/47052106/161381325-238b448c-c5d0-4cf8-9a2f-17840d3a6d81.png)
+
+- 기본적으로 docker0 인터페이스 안에 있는 네트워크는 `static ip` 할당이 안된다
+  - 기본은 왼쪽 그림처럼 자동 할당됨
+- user-defined bridge network 생성 (오른쪽 그림)
+  - `static ip`할당이 됨
+  - `docker network create --driver bridge --subnet 192.168.100.0/24 --gateway 192.168.100.254 my net`
+    - driver bridge 안써도 된다 (디폴트)
+  - `docker network ls`
+  - `docker run -d --name web -p 80:80 nginx`
+  - `curl localhost`
+  - `docker run -d --name appjs --net mynet --ip 192.168.100.100 -p 8080:8080 chung1306/appjs`
+  - `curl localhost:8080`
+
+
+
+**컨테이너끼리 통신**
+
+![image](https://user-images.githubusercontent.com/47052106/161381884-cc6f11fa-02f6-447e-b32f-b91db92e529f.png)
+
+- 컨테이너를 이용한 server & client 서비스 운영
+  - MySQL
+    - `docker run -d --name mysql -v /dbdata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=wordpress -e MYSQL_PASSWORD=wordpress mysql`
+  - Wordpress
+    - `docker run -d --name wordpress --link mysql:mysql -e WORDPRESS_DB_PASSWORD=wordpress -p 80:80 wordpress`
+      - --link: 컨테이너이름:부르기좋은이름
+
+
+
+
+
+
+
+
+
+
+
