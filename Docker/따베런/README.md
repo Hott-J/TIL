@@ -460,10 +460,10 @@ services:
 
   - ```yml
     service:
-    	webserver:
-    		image: nginx
-    	db:
-    		image: redis
+      webserver:
+    	image: nginx
+      db:
+    	image: redis
     ```
 
 - build
@@ -472,7 +472,7 @@ services:
 
   - ```yml
     webapp:
-    	build .
+      build .
     ```
 
 - image
@@ -481,7 +481,7 @@ services:
 
   - ```yml
     webapp:
-    	image: centos:7
+      image: centos:7
     ```
 
 - command
@@ -490,8 +490,8 @@ services:
 
   - ```yml
     app:
-    	image: node:12-alpine
-    	command: sh -c "yarn install && yarn run dev"
+      image: node:12-alpine
+      command: sh -c "yarn install && yarn run dev"
     ```
 
 - port
@@ -500,10 +500,10 @@ services:
 
   - ```yml
     webapp:
-    	image: httpd
-    	port:
-    		-80 #랜덤 포트 할당
-    		-8443:443 #8443 포트 할당)
+      image: httpd
+      port:
+    	-80 #랜덤 포트 할당
+    	-8443:443 #8443 포트 할당)
     ```
 
 - links
@@ -512,9 +512,9 @@ services:
 
   - ```yml
      webserver:
-    	image: wordpress
-    	link:
-    		db:mysql #컨테이너명:alias
+      image: wordpress
+      link:
+    	db:mysql #컨테이너명:alias
     ```
 
 - expose
@@ -523,7 +523,7 @@ services:
 
   - ```yml
     webapp:
-    	build: .
+      build: .
     ```
 
 - volumes
@@ -532,9 +532,9 @@ services:
 
   - ```yml
     webapp:
-    	image: httpd
-    	volumes:
-    		- /var/www/html
+      image: httpd
+      volumes:
+        - /var/www/html
     ```
 
 - environment
@@ -543,9 +543,9 @@ services:
 
   - ```yml
     database:
-    	image: mysql
-    	environment:
-    		MYSQL_ROOT_PASSWORD: pass
+      image: mysql
+      environment:
+    	MYSQL_ROOT_PASSWORD: pass
     ```
 
 - restart
@@ -560,8 +560,8 @@ services:
 
   - ```yml
     database:
-    	image: mysql
-    	restart: always
+      image: mysql
+      restart: always
     ```
 
 - depends_on
@@ -570,12 +570,12 @@ services:
 
   - ```yml
     services:
-    	web:
-    		image: wordpress
-    		depends_on:
-    			- db
-    	db:
-    		image: mysql
+      web:
+    	image: wordpress
+    	depends_on:
+    	  - db
+      db:
+    	image: mysql
     ```
 
 
@@ -594,18 +594,18 @@ services:
     - ```yml
       version: '3'
       services:
-      	web:
-      		image: httpd
-      		ports:
-      			- "80:80"
-      		links:
-      			- mysql:db
-      		command: apachectl -DFOREGROUND
+        web:
+      	image: httpd
+      	ports:
+      	  - "80:80"
+      	links:
+      	  - mysql:db
+      	command: apachectl -DFOREGROUND
       	mysql:
-      		image: mysql
-      		comman: mysqld
-      		environment:
-      			MYSQL_ROOT_PASSWORD: pass
+      	  image: mysql
+      	  command: mysqld
+      	  environment:
+      		MYSQL_ROOT_PASSWORD: pass
       ```
 
   - 3단계 docker-compose 명령어
@@ -647,12 +647,12 @@ services:
     - ```yml
       version: "3"
       sevices:
-      	web:
-      		build: . #현재 디렉토리에 있는 도커파일을 기준으로 빌드
-      		ports:
-      			- "5000:5000"
+        web:
+      	build: . #현재 디렉토리에 있는 도커파일을 기준으로 빌드
+      	ports:
+      	  - "5000:5000"
       	redis:
-      		image: "reds:alpine"
+      	  image: "reds:alpine"
       ```
 
   - 4단계 docker-compose 명령어
@@ -660,3 +660,4 @@ services:
     - `docker-compose up -d`
 
   
+
