@@ -461,9 +461,9 @@ services:
   - ```yml
     service:
       webserver:
-    	image: nginx
+        image: nginx
       db:
-    	image: redis
+        image: redis
     ```
 
 - build
@@ -502,8 +502,8 @@ services:
     webapp:
       image: httpd
       port:
-    	-80 #랜덤 포트 할당
-    	-8443:443 #8443 포트 할당)
+        -80 #랜덤 포트 할당
+        -8443:443 #8443 포트 할당)
     ```
 
 - links
@@ -514,7 +514,7 @@ services:
      webserver:
       image: wordpress
       link:
-    	db:mysql #컨테이너명:alias
+        db:mysql #컨테이너명:alias
     ```
 
 - expose
@@ -545,7 +545,7 @@ services:
     database:
       image: mysql
       environment:
-    	MYSQL_ROOT_PASSWORD: pass
+        MYSQL_ROOT_PASSWORD: pass
     ```
 
 - restart
@@ -571,11 +571,11 @@ services:
   - ```yml
     services:
       web:
-    	image: wordpress
-    	depends_on:
-    	  - db
+        image: wordpress
+        depends_on:
+          - db
       db:
-    	image: mysql
+        image: mysql
     ```
 
 
@@ -595,17 +595,17 @@ services:
       version: '3'
       services:
         web:
-      	image: httpd
-      	ports:
-      	  - "80:80"
-      	links:
-      	  - mysql:db
-      	command: apachectl -DFOREGROUND
-      	mysql:
-      	  image: mysql
-      	  command: mysqld
-      	  environment:
-      		MYSQL_ROOT_PASSWORD: pass
+          image: httpd
+          ports:
+            - "80:80"
+          links:
+            - mysql:db
+          command: apachectl -DFOREGROUND
+        mysql:
+          image: mysql
+          command: mysqld
+          environment:
+            MYSQL_ROOT_PASSWORD: pass
       ```
 
   - 3단계 docker-compose 명령어
@@ -648,11 +648,11 @@ services:
       version: "3"
       sevices:
         web:
-      	build: . #현재 디렉토리에 있는 도커파일을 기준으로 빌드
-      	ports:
-      	  - "5000:5000"
-      	redis:
-      	  image: "reds:alpine"
+          build: . #현재 디렉토리에 있는 도커파일을 기준으로 빌드
+          ports:
+            - "5000:5000"
+        redis:
+          image: "reds:alpine"
       ```
 
   - 4단계 docker-compose 명령어
