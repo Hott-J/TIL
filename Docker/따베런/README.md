@@ -379,7 +379,7 @@ ENTRYPOINT ["node", "/app.js"] # node명령어로 /app.js 실행
   - iptables rule을 통한 포트 노출
     - **-p hostPort:containerPort**
     - -p containerPort: hostPort는 random
-    - -P
+    - -P: 공식 dockerfile에 expose 된 포트 수 만큼 랜덤으로 포트포워딩 해준다
   - `docker run --name web -d -p 80:80 nginx`
   - `iptables -t nat -L -n -v`
 - nginx 여러개 컨테이너 실행?
@@ -396,13 +396,15 @@ ENTRYPOINT ["node", "/app.js"] # node명령어로 /app.js 실행
   - 기본은 왼쪽 그림처럼 자동 할당됨
 - user-defined bridge network 생성 (오른쪽 그림)
   - `static ip`할당이 됨
-  - `docker network create --driver bridge --subnet 192.168.100.0/24 --gateway 192.168.100.254 my net`
+  - `docker network create --driver bridge --subnet 192.168.100.0/24 --gateway 192.168.100.254 mynet`
     - driver bridge 안써도 된다 (디폴트)
   - `docker network ls`
   - `docker run -d --name web -p 80:80 nginx`
   - `curl localhost`
   - `docker run -d --name appjs --net mynet --ip 192.168.100.100 -p 8080:8080 chung1306/appjs`
   - `curl localhost:8080`
+- `brctl show`
+  - bridge network 확인
 
 
 
@@ -419,11 +421,242 @@ ENTRYPOINT ["node", "/app.js"] # node명령어로 /app.js 실행
 
 
 
+### Docker Compose
+
+**도커 컴포즈**
+
+- 여러 컨테이너를 일괄적으로 정의하고 실행할 수 있는 툴
+  - 하나의 서비스를 운영하기 위해서는 여러 개의 애플리케이션이 동작해야 함
+  - 컨테이너화 된 애플리케이션들을 통합 관리할 수 있음
+
+```yml
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: somewordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+```
+
+`docker run --name db -v db_data:/var/lib/mysql --restart=always -e MYSQL_ROOT_PASSWOR=somewordpress... mysql:5.7`
 
 
 
+**문법 정리**
+
+- version
+
+  - compose 버전. 버전에 따라 지원 문법이 다름
+  - `version: "2"`
+
+- services
+
+  - 컴포즈를 이용해서 실행할 컨테이너 옵션을 정의
+
+  - ```yml
+    service:
+    	webserver:
+    		image: nginx
+    	db:
+    		image: redis
+    ```
+
+- build
+
+  - 컨테이너 빌드
+
+  - ```yml
+    webapp:
+    	build .
+    ```
+
+- image
+
+  - compose를 통해 실행할 이미지를 지정
+
+  - ```yml
+    webapp:
+    	image: centos:7
+    ```
+
+- command
+
+  - 컨테이너에서 실행될 명령어 지정
+
+  - ```yml
+    app:
+    	image: node:12-alpine
+    	command: sh -c "yarn install && yarn run dev"
+    ```
+
+- port
+
+  - 컨테이너가 공개하는 포트를 나열
+
+  - ```yml
+    webapp:
+    	image: httpd
+    	port:
+    		-80 #랜덤 포트 할당
+    		-8443:443 #8443 포트 할당)
+    ```
+
+- links
+
+  - 다른 컨테이너와 연계할 때 연계할 컨테이너 지정
+
+  - ```yml
+     webserver:
+    	image: wordpress
+    	link:
+    		db:mysql #컨테이너명:alias
+    ```
+
+- expose
+
+  - 포트를 링크로 연계된 컨테이너에게만 공개할 포트
+
+  - ```yml
+    webapp:
+    	build: .
+    ```
+
+- volumes
+
+  - 컨테이너에 볼륨을 마운트
+
+  - ```yml
+    webapp:
+    	image: httpd
+    	volumes:
+    		- /var/www/html
+    ```
+
+- environment
+
+  - 컨테이너에 적용할 환경변수를 정의
+
+  - ```yml
+    database:
+    	image: mysql
+    	environment:
+    		MYSQL_ROOT_PASSWORD: pass
+    ```
+
+- restart
+
+  - 컨테이너가 종료될 때 적용할 restart 정책
+
+  - no: 재시작 되지 않음
+
+  - always: 컨테이너를 수동으로 끄기 전까지 항상 재시작
+
+  - on-failure: 오류가 있을 시에 재시작
+
+  - ```yml
+    database:
+    	image: mysql
+    	restart: always
+    ```
+
+- depends_on
+
+  - 컨테이너 간의 종속성을 정의. 정의한 컨테이너가 먼저 동작되어야 한다
+
+  - ```yml
+    services:
+    	web:
+    		image: wordpress
+    		depends_on:
+    			- db
+    	db:
+    		image: mysql
+    ```
 
 
 
+- 도커 컴포즈로 동작시키는 웹 서버
+
+  - 1단계 서비스 디렉토리 생성
+
+    - `mkdir webserver`
+    - `cd webserver`
+
+  - 2단계 docker-compose.yml 생성
+
+    - `cat > docker-compose.yml`
+
+    - ```yml
+      version: '3'
+      services:
+      	web:
+      		image: httpd
+      		ports:
+      			- "80:80"
+      		links:
+      			- mysql:db
+      		command: apachectl -DFOREGROUND
+      	mysql:
+      		image: mysql
+      		comman: mysqld
+      		environment:
+      			MYSQL_ROOT_PASSWORD: pass
+      ```
+
+  - 3단계 docker-compose 명령어
+
+    - `docker-compose up -d`
+    - `docker-compose ps`
+    - `docker-compose scale mysql=2`
+    - `docker-compose ps`
+    - `docker-compose down`
 
 
+
+- 빌드와 운영
+
+  - 방문횟수를 카운트하는 python 컨테이너 빌드와 운영
+
+  - 1단계 서비스 디렉토리 생성
+
+    - `mkdir composetest`
+    - `cd composetest`
+
+  - 2단계 빌드를 위한 dockerfile 생성
+
+    - ```dockerfile
+      FROM python:3.7-alpine
+      WORKDIR /code
+      ENV FLASK_APP=app.py
+      ENV FLASK_RUN_HOST=0.0.0.0
+      RUN apk add --no-cache gcc musl-dev linux-headers
+      COPY requirements.txt requirements.txt
+      RUN pip install -r requirements.txt
+      EXPOSE 5000
+      COPY ..
+      CMD ["flask","run"]
+      ```
+
+  - 3단계 docker-compose.yml 생성
+
+    - ```yml
+      version: "3"
+      sevices:
+      	web:
+      		build: . #현재 디렉토리에 있는 도커파일을 기준으로 빌드
+      		ports:
+      			- "5000:5000"
+      	redis:
+      		image: "reds:alpine"
+      ```
+
+  - 4단계 docker-compose 명령어
+
+    - `docker-compose up -d`
+
+  
