@@ -135,12 +135,32 @@ mockMvc response body 한글 깨짐
 
 
 
+# 4 @Mock @MockBean @Spy @SpyBean 차이점
 
+@Mock은 @injectMocks에 대해서만 해당 클래스안에서 정의된 객체를 찾아서 의존성을 해결
+
+@MockBean은 mock 객체를 스프링 컨텍스트에 등록하는 것이기 때문에 @SpringBootTest를 통해서 Autowired에 의존성이 주입
+
+**즉, @MockBean으로 mock 객체를 스프링 컨텍스트에 등록하고, 이를 @InjectMocks로 주입하려고하면 의존성을 찾지 못한 NPE가 발생한다**
+
+
+
+@Spy는 하나의 객체를 선택적으로 stub할 수 있도록 한다
+
+- @Mock과 마찬가지로, @InjectMocks와 @Spy를 같이 사용할 수 있다
+
+@SpyBean도 @MockBean과 마찬가지로 스프링 컨텍스트에 등록한다
+
+- 주의사항
+  - @SpyBean을 사용할 때, @SpyBean이 인터페이스일 경우에는 해당 인터페이스를 구현하는 실제 구현체가 꼭 스프링 컨텍스트에 등록되어 있어야 한다.
+  - @SpyBean은 실제 구현된 객체를 감싸는 프록시 객체 형태이기 때문에 스프링 컨텍스트에 실제 구현체가 등록되어 있어야 한다.
+  - @MockBean으로 변경할 경우, 기존 스프링 컨텍스트에 등록된 구현체를 사용하는 것이 아닌 껍데기만 가진 mock 객체를 스프링 컨텍스트에 등록하는 것이기 때문에 상관없다.
 
 
 참고
 
 * https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html
+* https://cobbybb.tistory.com/16
 
 
 
