@@ -408,6 +408,113 @@ $ kubectl create # 상태 생성 (물론 kubectl run 명령어도 있지만 잘 
 
  
 
+
+
+## 4-1 쿠버네티스 파드에 문제가 생겼다면
+
+- 파드만 배포
+  - 문제 발생
+- 디플로이먼트가 있다면
+  - 파드를 다시 만들어줘서 괜찮다
+  - 파드의 수를 유지해준다
+
+
+
+## 4-2 쿠버네티스 워커 노드의 구성 요소에 문제가 생겼다면
+
+- 워커노드의 Kubelet이 문제가 생김
+  - API서버로 이에 대한 사실을 전달하지 못하므로 pod를 구성할때 해당 워커노드에는 pending 상태가 된다
+- 워커노드의 container가 문제가 생김
+  - API서버로 이에 대한 사실을 전달하여 pod를 구성할때 컨테이너의 문제가 생긴 워커노드에는 아예 생성시도조차 하지 않는다
+
+
+
+![image-20220414113246825](C:\Users\hakjae_chung\AppData\Roaming\Typora\typora-user-images\image-20220414113246825.png)
+
+1번 워커 노드의 컨테이너를 다시 살려서 replicas=9로 파드를 추가함
+
+- 기존에 w1:1, w2:2, w3:3 의 균형이 깨진 배포였는데, 스케줄러가 작동하여 각 워커노드마다 3개씩의 파드를 구성하게끔 균형있는 배포가 되었다
+
+
+
+## 4-3 쿠버네티스 마스터 노드의 구성 요소에 문제가 생겼다면
+
+![image](https://user-images.githubusercontent.com/47052106/163303691-d1b80206-004d-4169-82ce-6513e89006ea.png)
+
+구성요소 확인
+
+
+
+- 스케줄러가 삭제된다면?
+  - 삭제되면 바로 다시 생성해준다
+
+- 마스터노드의 kubelet이 중단된다면?
+  - 스케줄러가 작동하지 않는 것처럼 보이나 괜찮다
+- 마스터노드의 도커가 중단된다면?
+  - 시스템에 문제가 발생
+  - 그러므로 여러개의 마스터를 두고 사용한다
+
+
+
+## 5-1 쿠버네티스에서 오브젝트란
+
+추구하는 상태(Spec)와 현재 상태(Status)를 맞춰주려함
+
+![image](https://user-images.githubusercontent.com/47052106/163315231-97fa53b0-71f9-461b-91d3-d2f7b8834326.png)
+
+deployment 설정 파일에서 spec.replica를 9에서 3으로 변경하면, 현재 상태를 추구하는 상태인 3으로 맞춰준다
+
+
+
+## 5-2 쿠버네티스 기본 오브젝트
+
+**파드**
+
+- 추구하는 상태값을 갖고 있다
+
+**서비스**
+
+![image](https://user-images.githubusercontent.com/47052106/163317207-5793c20c-3967-422b-aa56-23a33c3497b1.png)
+
+**네임스페이스**
+
+![image](https://user-images.githubusercontent.com/47052106/163317257-ebc85403-4de5-49ac-924c-c0403dfedf19.png)
+
+**볼륨**
+
+- 영속적인 데이터 보존
+
+
+
+## 6-1 kubectl 쉽게 쓰는 법
+
+- tab 활용
+- alias 활용
+  - alias k = kubectl
+  - alias ka = ' kubectl apply -f '
+
+![image](https://user-images.githubusercontent.com/47052106/163322389-f0077629-8183-4118-b9bc-fde534b00d22.png)
+
+
+
+## 6-2 쿠버네티스 버전 업그레이드
+
+- kubectl, kubeadm, kubelet version을 모두 업그레이드 해줘야한다
+  - 다시 시작해야 적용됨
+  - `systemctl restart kubelet`
+  - `systemctl daemon-reload`
+  - 워커노드의 경우 kubelet만 업그레이드해주고 다시 시작하면 된다
+
+
+
+## 6-3 오브젝트 예약 단축어
+
+![image](https://user-images.githubusercontent.com/47052106/163323711-163fa124-ee95-4dc7-944f-d66953c49382.png)
+
+
+
+
+
 * 참고
 
 https://www.inflearn.com/course/%EC%BF%A0%EB%B2%84%EB%84%A4%ED%8B%B0%EC%8A%A4-%EC%89%BD%EA%B2%8C%EC%8B%9C%EC%9E%91/lecture/71413
