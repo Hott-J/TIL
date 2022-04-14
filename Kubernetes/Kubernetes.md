@@ -427,9 +427,7 @@ $ kubectl create # 상태 생성 (물론 kubectl run 명령어도 있지만 잘 
 - 워커노드의 container가 문제가 생김
   - API서버로 이에 대한 사실을 전달하여 pod를 구성할때 컨테이너의 문제가 생긴 워커노드에는 아예 생성시도조차 하지 않는다
 
-
-
-![image-20220414113246825](C:\Users\hakjae_chung\AppData\Roaming\Typora\typora-user-images\image-20220414113246825.png)
+![image](https://user-images.githubusercontent.com/47052106/163327255-5543b82f-5d15-4327-bb5f-35f551c8df32.png)
 
 1번 워커 노드의 컨테이너를 다시 살려서 replicas=9로 파드를 추가함
 
