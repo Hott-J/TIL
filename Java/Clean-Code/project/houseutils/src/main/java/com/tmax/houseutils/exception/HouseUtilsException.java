@@ -12,9 +12,8 @@ public class HouseUtilsException extends RuntimeException {
     }
 
     public HouseUtilsException(ErrorCode errorCode, String customMessage) {
-        super(customMessage);
+        super(customMessage); // RuntimeException의 message를 상속
         this.errorCode = errorCode;
         this.message = customMessage;
     }
-
 }
