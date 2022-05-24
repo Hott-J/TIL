@@ -32,7 +32,7 @@ private static final Logger log = LoggerFactory.getLogger(Xxx.class);
 
 
 
-**로그가 출력되는 포멧 확인 **
+**로그가 출력되는 포멧 확인**
 
 - 시간, 로그 레벨, 프로세스 ID, 쓰레드 명, 클래스명, 
 
