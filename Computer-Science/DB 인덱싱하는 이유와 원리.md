@@ -109,7 +109,10 @@
 
 **B+Tree 사용 이유**
 
--   인덱스 컬럼은 부등호를 이용한 순차 검색 연산이 자주 발생할 수 있다. 따라서 B+Tree의 Linked list를 이용하면 순차 검색을 효율적으로 할 수 있게 된다. 
+- 인덱스 컬럼은 부등호를 이용한 순차 검색 연산이 자주 발생할 수 있다. 따라서 B+Tree의 Linked list를 이용하면 순차 검색을 효율적으로 할 수 있게 된다.
+- 기존의 B-Tree도 한계가 있습니다. 가장 큰 단점은 바로 **시퀀셜 액세스**에 취약하다는 점입니다. 우리는 데이터를 가져올 때 range를 정해놓고 해당 range에 속하는 데이터를 가져오는 작업을 종종 하곤 합니다.
+  - `data = User.objects.filter(id__lte=5, id__gte=1)`
+  - 위와 같은 데이터 액세스를 시도한다면, 기본적으로 B-Tree는 루트부터 하향식으로 데이터를 찾아가기 때문에 여간 복잡해지지 않을 수 없습니다. (마치 BFS를 재귀로 구현하는 느낌?) 게다가 실제 데이터는 입력 순서대로 저장되어 있지도 않기 때문에 이렇게 흩뿌려져 있는 데이터를 정렬된 형태로 보여주는 작업은 매우 복잡합니다.
 
 
 
@@ -118,6 +121,12 @@
 ![image](https://user-images.githubusercontent.com/47052106/171113500-73eb67ad-2776-48e9-9a9a-ea01f6de8b18.png)
 
 ![image](https://user-images.githubusercontent.com/47052106/171113531-c6956e15-b13f-4383-801e-f5703ea0eae8.png)
+
+
+
+**정리**
+
+![image](https://user-images.githubusercontent.com/47052106/171126833-9cb66a75-f5a7-44f4-8df6-4fb434373ac5.png)
 
 
 
